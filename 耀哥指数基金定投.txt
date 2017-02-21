@@ -1,0 +1,90 @@
+package com.leyo.licai;
+
+import java.text.DecimalFormat;
+
+/**
+ * Created by LIYAO on 2017/2/21 0021.
+ */
+public class Mooc {
+
+    public static void main(String[] args){
+        //定义指数单价
+        double price = 5.381;
+
+        //定义当前资产总市值
+        double totalMarket = 0.00;
+
+        //定义投资总金额
+        double totalPrice = 0.00;
+
+        //定义投资总份额
+        int totalNumber = 0;
+
+        //定义当期投资金额基准（每隔一周涨2000）
+        double basePrice = 2000;
+
+        //定义当期投资金额
+        double currentPrice = 0.00;
+
+        //定义当期投资份额
+        int currentNumber = 0;
+
+        //定义当前累计盈亏
+        double profit = 0.00;
+
+        //计算随机数
+        double ranNumber = Math.random()/100;
+
+        //通过设置随机数是奇数还是偶数--->来控制股票是上涨还是下跌
+        boolean flag = ((int)(Math.random() * 10)) % 2 == 0;
+
+        //周期轮回（100周）
+        for(int i=1 ; i<200 ; i++){
+            if(i==1){
+                currentNumber = Integer.parseInt(getInteger2(basePrice / price));  //计算首期应购份额
+            }else {
+                if(flag){
+                    price = price + ranNumber;
+                }else{
+                    price = price - ranNumber;
+                }
+                totalMarket = totalNumber * price;  //持有总市值
+                if(totalMarket > basePrice){
+                    currentPrice = totalMarket - basePrice;
+                }else {
+                    currentPrice = basePrice - totalMarket;
+                }
+                currentNumber = Integer.parseInt(getInteger2(currentPrice / price));  //计算当前应该购买份额
+            }
+            totalPrice = totalPrice + (price * currentNumber);
+            basePrice += 2000;
+            totalNumber += currentNumber;
+
+            if(i != 1){
+                profit = (totalNumber * price) - totalPrice;
+            }
+            System.out.println("第" + i + "周---" + "当前单价：" + getThreePoint(price) + "---本次购买份额：" + currentNumber + "---总持有份额：" + totalNumber + "---本次投资金额：" + getTwoPoint(currentNumber*price) + "---当前累计投资：" + getTwoPoint(totalPrice) + "---当前总市值：" + getTwoPoint(totalNumber * price) + "---当前累计盈亏：" + getTwoPoint(profit));
+        }
+
+    }
+
+    //取整数
+    public static String getInteger2(double num) {
+        DecimalFormat df = new DecimalFormat("#");
+        return df.format(num);
+    }
+
+    //保留两位小数
+    public static String getTwoPoint(double num) {
+        DecimalFormat df = new DecimalFormat("0.00");
+        return df.format(num);
+    }
+
+    //保留三位小数
+    public static String getThreePoint(double num) {
+        DecimalFormat df = new DecimalFormat("0.000");
+        return df.format(num);
+    }
+
+
+}
